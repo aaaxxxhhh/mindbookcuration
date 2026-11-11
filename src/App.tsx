@@ -19,7 +19,7 @@ import {
   CRISIS_EXCLUDE,
   Book,
 } from "./data/catalog.ts";
-import { Bookmark, ExternalLink, RefreshCw, Share2, ThumbsUp, ThumbsDown, ArrowLeft, PhoneCall, Sparkles, Download } from "lucide-react";
+import { Bookmark, ExternalLink, RefreshCw, Share2, ThumbsUp, ThumbsDown, ArrowLeft, PhoneCall, Sparkles } from "lucide-react";
 
 export default function App() {
   const [view, setView] = useState<"ask" | "wait" | "result" | "saved" | "crisis">("ask");
@@ -245,17 +245,17 @@ export default function App() {
   return (
     <div className="min-h-screen text-[var(--ink)] flex flex-col justify-between">
       <main className="w-full max-w-[760px] mx-auto px-5 pt-8 pb-16 flex-1">
-        {/* ================= STEP 1: ASK VIEW ================= */}
+{/* ================= STEP 1: ASK VIEW ================= */}
         {view === "ask" && (
           <section className="animate-slide-up">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-4"
+            <div className="flex justify-end mb-4">
               <button
                 type="button"
                 onClick={() => {
                   setSavedBackView("ask");
                   setView("saved");
                 }}
-                className="inline-flex items-center gap-1.5 text-sm font-medium border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)] rounded-full px-3.5 py-1.5 hover:border-[var(--ink)] transition-colors shadow-xs ml-auto"
+                className="inline-flex items-center gap-1.5 text-sm font-medium border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)] rounded-full px-3.5 py-1.5 hover:border-[var(--ink)] transition-colors shadow-xs"
               >
                 <Bookmark className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>읽고 싶은 책</span>
