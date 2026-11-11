@@ -1,0 +1,7 @@
+{
+  "name": "emotion-books",
+  "version": "0.7.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=18" }
+}
