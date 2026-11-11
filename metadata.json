@@ -1,0 +1,6 @@
+{
+  "name": "감정 책 추천 - 지금 기분이 어때요?",
+  "description": "사용자가 입력한 마음과 감정을 Gemini AI가 분석하여 따뜻한 공감과 꼭 맞는 도서 3권을 추천해 드립니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
