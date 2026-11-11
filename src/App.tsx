@@ -248,15 +248,7 @@ export default function App() {
         {/* ================= STEP 1: ASK VIEW ================= */}
         {view === "ask" && (
           <section className="animate-slide-up">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-              <a
-                href="/project.zip"
-                download="book-recommend-project.zip"
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold bg-[#2F5D62] text-white rounded-full px-3.5 py-1.5 hover:opacity-90 transition-all shadow-sm"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>📥 Vercel 배포용 ZIP 파일 바로 다운로드</span>
-              </a>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4"
               <button
                 type="button"
                 onClick={() => {
