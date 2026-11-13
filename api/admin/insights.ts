@@ -12,7 +12,7 @@ function diagnose() {
   try { sa = JSON.parse(raw); } catch { return { problem: "JSON 형식 오류", ...shape }; }
   if (typeof sa === "string") return { problem: "따옴표로 한 번 더 감싸져 있음", ...shape };
   const missing = ["project_id", "client_email", "private_key"].filter((k) => !sa || !sa[k]);
-  return { problem: missing.length ? "항목 누락" : "알 수 없음", missing, type: sa?.type || null, ...shape };
+  return { problem: missing.length ? "항목 누락" : "알 수 없음", missing, type: sa?.type || null, topKeys: sa && typeof sa === "object" ? Object.keys(sa).slice(0, 20) : [], ...shape };
 }
 
 export default async function handler(req: any, res: any) {
