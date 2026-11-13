@@ -1,9 +1,9 @@
 // Upstash Redis(REST) 저장소 — 추가 패키지 없이 fetch로 호출
 // Vercel Marketplace에서 Upstash Redis를 연결하면 아래 환경변수가 자동으로 들어옴
 const URL_ =
-  process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || "";
+  process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.MIND_CURATION_KV_REST_API_URL || "";
 const TOKEN =
-  process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || "";
+  process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.MIND_CURATION_KV_REST_API_TOKEN || "";
 
 export const storeReady = Boolean(URL_ && TOKEN);
 
