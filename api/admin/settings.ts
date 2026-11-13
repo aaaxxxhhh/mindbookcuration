@@ -3,6 +3,7 @@ import { isAdmin, readBody } from "../_lib/auth.ts";
 import { getConfig, saveConfig, DEFAULT_CONFIG } from "../_lib/config.ts";
 import { storeReady } from "../_lib/store.ts";
 import { lastDays } from "../_lib/stats.ts";
+import { firestoreReady } from "../_lib/firestore.ts";
 
 export default async function handler(req: any, res: any) {
   res.setHeader("Cache-Control", "no-store");
@@ -19,6 +20,7 @@ export default async function handler(req: any, res: any) {
         claude: Boolean(process.env.ANTHROPIC_API_KEY),
         aladin: Boolean(process.env.ALADIN_TTB_KEY),
         store: storeReady,
+        firebase: firestoreReady,
       },
       stats,
     });
