@@ -21,6 +21,15 @@ import {
 } from "./data/catalog.ts";
 import { Bookmark, ExternalLink, RefreshCw, Share2, ThumbsUp, ThumbsDown, ArrowLeft, PhoneCall, Sparkles } from "lucide-react";
 
+// 책 저장·반응·추천 감정을 이름 없는 통계로 보냄 (실패해도 화면에는 영향 없음)
+const track = (event: Record<string, unknown>) => {
+  try {
+    fetch("/api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(event), keepalive: true }).catch(() => {});
+  } catch {
+    // ignore
+  }
+};
+
 export default function App() {
   const [view, setView] = useState<"ask" | "wait" | "result" | "saved" | "crisis">("ask");
   const [input, setInput] = useState("");
@@ -71,6 +80,7 @@ export default function App() {
     const isCurrentlySaved = saved.includes(id);
     const updated = isCurrentlySaved ? saved.filter((x) => x !== id) : [id, ...saved];
     setSaved(updated);
+    track({ type: isCurrentlySaved ? "unsave" : "save", bookId: id });
     try {
       localStorage.setItem("mb_saved", JSON.stringify(updated));
     } catch {
@@ -84,6 +94,7 @@ export default function App() {
     const nextVal = currentVal === val ? 0 : val;
     const updated = { ...feedback, [id]: nextVal };
     setFeedback(updated);
+    track({ type: "feedback", bookId: id, from: currentVal, to: nextVal });
     try {
       localStorage.setItem("mb_feedback", JSON.stringify(updated));
     } catch {
@@ -196,6 +207,7 @@ export default function App() {
 
     setInput(query);
     setDominantEmos(chosenEmos);
+    if (!data.crisis) track({ type: "recommend", emotions: chosenEmos });
     setPool(ordered);
     setPage(0);
     setShelfIds(ordered.slice(0, 3));
@@ -299,7 +311,7 @@ export default function App() {
             </form>
 
             <p className="text-xs text-[var(--muted)] mb-8">
-              입력한 문장은 감정 분석을 위해 Gemini AI로 안전하게 전달되며, 페이지에 보관되지 않아요.
+              입력한 문장은 감정 분석을 위해 AI로 전달되며 저장되지 않아요. 책 담기·반응은 누구인지 알 수 없는 통계로만 모아요.
             </p>
 
             <div className="pt-2">
