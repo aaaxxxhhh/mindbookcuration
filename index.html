@@ -4,18 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>지금 기분이 어때요? · 감정 책 추천</title>
-    <meta name="description" content="사용자가 입력한 마음과 감정을 Gemini AI가 분석하여 따뜻한 공감과 꼭 맞는 도서 3권을 추천해 드립니다." />
-    <meta property="og:title" content="지금 기분이 어때요? · 감정 책 추천" />
-    <meta property="og:description" content="사용자가 입력한 마음과 감정을 Gemini AI가 분석하여 따뜻한 공감과 꼭 맞는 도서 3권을 추천해 드립니다." />
+    <meta name="description" content="지금 내 마음을 적거나 감정을 고르면 AI가 마음을 읽고 꼭 맞는 책 3권을 추천해 드려요. 우울·불안·지침·외로움·그리움 등 감정별 책 추천." />
+    <link rel="canonical" href="https://mindbookcuration-pi.vercel.app/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#2F5D62" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="감정 책 추천" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:url" content="https://mindbookcuration-pi.vercel.app/" />
+    <meta property="og:title" content="지금 기분이 어때요? · 감정 책 추천" />
+    <meta property="og:description" content="지금 내 마음을 적거나 감정을 고르면 AI가 마음을 읽고 꼭 맞는 책 3권을 추천해 드려요. 우울·불안·지침·외로움·그리움 등 감정별 책 추천." />
+    <meta property="og:image" content="https://mindbookcuration-pi.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="지금 기분이 어때요? 감정을 고르면 꼭 맞는 책 3권을 골라 드려요." />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="지금 기분이 어때요? · 감정 책 추천" />
+    <meta name="twitter:description" content="지금 내 마음을 적거나 감정을 고르면 AI가 마음을 읽고 꼭 맞는 책 3권을 추천해 드려요. 우울·불안·지침·외로움·그리움 등 감정별 책 추천." />
+    <meta name="twitter:image" content="https://mindbookcuration-pi.vercel.app/og-image.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <main style="max-width:640px;margin:0 auto;padding:48px 20px;font-family:'Noto Sans KR',sans-serif;line-height:1.7">
+        <h1>지금 기분이 어때요?</h1>
+        <p>느끼는 그대로 적으면, 그 마음에 꼭 맞는 책 3권을 골라 드려요.</p>
+        <h2>감정별 책 추천</h2>
+        <ul>
+          <li>가라앉는 마음: 슬픔, 우울, 공허함</li>
+          <li>불안한 마음: 불안, 걱정, 긴장, 두려움</li>
+          <li>날 선 마음: 분노, 짜증, 억울함</li>
+          <li>지친 마음: 무기력, 지침, 외로움</li>
+          <li>밝은 마음: 기쁨, 행복, 뿌듯함, 설렘, 사랑</li>
+          <li>그리운 마음: 그리움, 상실감</li>
+        </ul>
+        <noscript><p>책 추천 기능을 사용하려면 브라우저에서 JavaScript를 켜 주세요.</p></noscript>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
