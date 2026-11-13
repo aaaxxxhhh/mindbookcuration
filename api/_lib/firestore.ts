@@ -108,3 +108,36 @@ export async function list(collection: string): Promise<{ id: string; [k: string
   }
   return out;
 }
+
+const enc = (v: any): any =>
+  Array.isArray(v) ? { arrayValue: { values: v.map(enc) } }
+  : typeof v === "number" ? (Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v })
+  : typeof v === "string" ? { stringValue: v }
+  : v && typeof v === "object" ? { mapValue: { fields: Object.fromEntries(Object.entries(v).map(([k, x]) => [k, enc(x)])) } }
+  : { nullValue: null };
+
+const dec = (v: any): any =>
+  v.arrayValue ? (v.arrayValue.values || []).map(dec)
+  : v.mapValue ? Object.fromEntries(Object.entries(v.mapValue.fields || {}).map(([k, x]) => [k, dec(x)]))
+  : v.integerValue !== undefined ? Number(v.integerValue)
+  : v.doubleValue !== undefined ? Number(v.doubleValue)
+  : v.stringValue ?? v.timestampValue ?? null;
+
+/** 문서 하나 읽기 (없으면 null) */
+export async function getDoc(path: string): Promise<Record<string, any> | null> {
+  if (!account) return null;
+  try {
+    const j = await call(base() + "/" + path);
+    return Object.fromEntries(Object.entries(j.fields || {}).map(([k, x]) => [k, dec(x)]));
+  } catch (e: any) {
+    if (String(e?.message).endsWith("_404")) return null;
+    throw e;
+  }
+}
+
+/** 문서 하나 통째로 저장 (덮어쓰기) */
+export async function setDoc(path: string, data: Record<string, any>): Promise<void> {
+  if (!account) return;
+  const fields = Object.fromEntries(Object.entries({ ...data, updatedAt: new Date().toISOString() }).map(([k, x]) => [k, enc(x)]));
+  await call(base() + "/" + path, { method: "PATCH", body: JSON.stringify({ fields }) });
+}
