@@ -6,7 +6,13 @@ interface Config {
   timeoutSec: number; dailyLimit: number; extraRules: string; bannedWords: string[]; crisisWords: string[];
   updatedAt?: string;
 }
-interface Env { gemini: boolean; claude: boolean; aladin: boolean; store: boolean }
+interface Env { gemini: boolean; claude: boolean; aladin: boolean; store: boolean; firebase?: boolean }
+interface Insights {
+  ready: boolean;
+  books?: { id: string; title: string; author: string; saves: number; likes: number; dislikes: number }[];
+  emotions?: { name: string; count: number }[];
+  days?: { day: string; recommends: number; saves: number; likes: number; dislikes: number }[];
+}
 interface Stat { day: string; [k: string]: number | string }
 interface TestOut {
   result: { emotions: string[]; empathy: string; reasons: Record<string, string>; crisis: boolean; source: string };
@@ -66,6 +72,8 @@ export default function AdminApp() {
   const [busy, setBusy] = useState(false);
   const [testText, setTestText] = useState("요즘 혼자인 것 같고 너무 지쳐");
   const [testOut, setTestOut] = useState<TestOut | null>(null);
+  const [insights, setInsights] = useState<Insights | null>(null);
+  const [insightErr, setInsightErr] = useState("");
 
   useEffect(() => {
     document.title = "관리자 · 감정 책 추천";
@@ -78,10 +86,17 @@ export default function AdminApp() {
     try {
       const d = await api("/api/admin/settings");
       setCfg(d.config); setSaved(d.config); setDefaults(d.defaults); setEnv(d.env); setStats(d.stats || []);
+      loadInsights();
       setAuthed(true);
     } catch (e: any) {
       if (e.status === 401) setAuthed(false); else { setAuthed(false); setMsg({ type: "err", text: e.message }); }
     }
+  }
+
+  async function loadInsights() {
+    setInsightErr("");
+    try { setInsights(await api("/api/admin/insights")); }
+    catch (e: any) { setInsightErr(e.message); }
   }
 
   async function login() {
@@ -155,7 +170,7 @@ export default function AdminApp() {
       </header>
 
       <Section title="연결 상태" desc="API 키와 저장소는 Vercel 환경변수에서 관리해요. 이 화면에서는 키를 보거나 바꿀 수 없어요.">
-        <Dot on={env.gemini} text="Gemini" /><Dot on={env.claude} text="Claude" /><Dot on={env.aladin} text="알라딘 표지" /><Dot on={env.store} text="설정 저장소" />
+        <Dot on={env.gemini} text="Gemini" /><Dot on={env.claude} text="Claude" /><Dot on={env.aladin} text="알라딘 표지" /><Dot on={env.store} text="설정 저장소" /><Dot on={Boolean(env.firebase)} text="Firebase 통계" />
         {!env.store && <p style={{ ...help, color: "#B0533D" }}>설정 저장소(Upstash Redis)가 없어 설정 저장과 사용 현황 기록이 꺼져 있어요.</p>}
       </Section>
 
@@ -188,6 +203,33 @@ export default function AdminApp() {
             </table>
           </div>
         )}
+      </Section>
+
+      <Section title="책 반응 통계 (Firebase)" desc="누적 기준 · 누구인지 알 수 없는 숫자만 모아요. 입력 문장은 저장하지 않아요.">
+        {insightErr && <p style={{ ...help, color: "#B0533D" }}>{insightErr}</p>}
+        {insights && !insights.ready && <p style={help}>Firebase가 연결되지 않았어요. FIREBASE_GUIDE.md 순서대로 연결하면 통계가 쌓여요.</p>}
+        {insights?.ready && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 12, fontSize: 14, lineHeight: 1.7 }}>
+            <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px" }}>
+              <b>반응 많은 책 TOP 10</b>
+              {(insights.books || []).length === 0 && <p style={{ ...help, margin: 0 }}>아직 데이터가 없어요.</p>}
+              {(insights.books || []).map((b, i) => (
+                <p key={b.id} style={{ margin: 0 }}>{i + 1}. {b.title} · 담기 {b.saves} · 끌림 {b.likes} · 별로 {b.dislikes}</p>
+              ))}
+            </div>
+            <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px" }}>
+              <b>많이 추천된 감정</b>
+              {(insights.emotions || []).length === 0 && <p style={{ ...help, margin: 0 }}>아직 데이터가 없어요.</p>}
+              {(insights.emotions || []).slice(0, 10).map((e) => <p key={e.name} style={{ margin: 0 }}>· {e.name} {e.count}회</p>)}
+            </div>
+            <div style={{ background: "var(--bg)", borderRadius: 10, padding: "12px 14px" }}>
+              <b>최근 7일</b>
+              {(insights.days || []).length === 0 && <p style={{ ...help, margin: 0 }}>아직 데이터가 없어요.</p>}
+              {(insights.days || []).map((d) => <p key={d.day} style={{ margin: 0 }}>· {d.day} 추천 {d.recommends} · 담기 {d.saves} · 끌림 {d.likes}</p>)}
+            </div>
+          </div>
+        )}
+        <button style={{ ...ghost, marginTop: 12 }} onClick={loadInsights}>통계 새로고침</button>
       </Section>
 
       <Section title="AI 동작 설정">
