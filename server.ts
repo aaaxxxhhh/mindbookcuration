@@ -18,6 +18,8 @@ import adminLogin from "./api/admin/login.ts";
 import adminLogout from "./api/admin/logout.ts";
 import adminSettings from "./api/admin/settings.ts";
 import adminTest from "./api/admin/test.ts";
+import trackHandler from "./api/track.ts";
+import adminInsights from "./api/admin/insights.ts";
 
 dotenv.config();
 
@@ -122,6 +124,8 @@ app.post("/api/admin/login", (req: Request, res: Response) => adminLogin(req, re
 app.post("/api/admin/logout", (req: Request, res: Response) => adminLogout(req, res));
 app.all("/api/admin/settings", (req: Request, res: Response) => adminSettings(req, res));
 app.post("/api/admin/test", (req: Request, res: Response) => adminTest(req, res));
+app.post("/api/track", (req: Request, res: Response) => trackHandler(req, res));
+app.get("/api/admin/insights", (req: Request, res: Response) => adminInsights(req, res));
 
 // Setup Vite middleware in dev or static server in prod
 async function startServer() {
